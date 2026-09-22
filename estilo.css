@@ -706,3 +706,152 @@ button:hover{
 transform:scale(1.05);
 
 }
+/* ==========================
+   RESPONSIVE CELULAR AGROTEC
+========================== */
+
+@media screen and (max-width:700px){
+
+body{
+    overflow-x:hidden;
+}
+
+
+/* MENU */
+
+header{
+
+    height:auto;
+    flex-direction:column;
+    padding:20px;
+    text-align:center;
+
+}
+
+
+.logo{
+
+    font-size:28px;
+
+}
+
+
+nav{
+
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+
+}
+
+
+nav a{
+
+    margin:5px;
+
+}
+
+
+/* PORTADA */
+
+.inicio{
+
+    height:auto;
+    min-height:650px;
+    padding:40px 20px;
+    text-align:center;
+
+}
+
+
+.texto h1{
+
+    font-size:38px;
+}
+
+
+.texto p{
+
+    font-size:18px;
+
+}
+
+
+/* BOTONES */
+
+button{
+
+    width:100%;
+    margin:8px 0;
+
+}
+
+
+/* TARJETAS */
+
+.contenedores,
+.lista,
+.productos-grid{
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+
+}
+
+
+.contenedores div,
+.producto,
+.producto-card{
+
+    width:90%;
+
+}
+
+
+
+/* BUSCADOR */
+
+.buscador{
+
+    flex-direction:column;
+
+}
+
+
+.buscador input{
+
+    width:100%;
+
+}
+
+
+/* PROYECTO */
+
+.flujo{
+
+    flex-direction:column;
+
+}
+
+
+.beneficios-grid{
+
+    grid-template-columns:1fr;
+
+}
+
+
+
+/* ESTADISTICAS */
+
+.impacto,
+.estadisticas{
+
+    flex-direction:column;
+    gap:30px;
+
+}
+
+
+}
