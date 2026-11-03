@@ -1,0 +1,11 @@
+AGROTEC - CORRECCIÓN VISUAL (noviembre 2026)
+
+1. Abre https://github.com/marpcelicastro/Agrotec-web
+2. En Add file > Upload files arrastra el CONTENIDO de esta carpeta, no el ZIP.
+3. Confirma Commit changes.
+4. Espera a que termine la publicación de GitHub Pages en Settings > Pages.
+5. Abre https://marpcelicastro.github.io/Agrotec-web/ y recarga con Ctrl+Shift+R (Windows) o Cmd+Shift+R (Mac).
+
+IMPORTANTE: agrotec-ui-2026.css es un archivo nuevo. Los 6 HTML ahora lo usan para evitar la caché del estilo anterior.
+No borres los scripts app.js / data.js / config.js ni modifiques las credenciales de Supabase si las has configurado.
+En modo demostración, los registros se guardan en tu navegador. Para compartir datos entre usuarios, configura Supabase según README.md.
