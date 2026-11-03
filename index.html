@@ -1,314 +1,34 @@
-<!DOCTYPE html>
-<html lang="es">
-
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Agrotec</title>
-
-<link rel="stylesheet" href="estilo.css">
-
-</head>
-
-
-<body>
-
-
-<header>
-
-<div class="logo">
-🌱 AGROTEC
-</div>
-
-
-<nav>
-<a href="index.html">Inicio</a>
-<a href="productor.html">Soy productor</a>
-<a href="comprador.html">Soy comprador</a>
-<a href="proyecto.html">Proyecto</a>
-</nav>
-
-
-<button class="login">
-Ingresar
-</button>
-
-
-</header>
-
-
-
-
-<section class="inicio">
-
-
-<div class="texto">
-
-
-<h1>
-Conectando el campo
-con nuevas oportunidades
-</h1>
-
-
-<p>
-Plataforma digital que conecta productores agrícolas de Lambayeque con compradores.
-</p>
-
-
-<div>
-
-<button class="verde" onclick="window.location.href='productor.html'">
-👨‍🌾 Soy productor
-</button>
-
-<button class="amarillo" onclick="window.location.href='comprador.html'">
-🛒 Soy comprador
-</button>
-
-<button class="blanco" onclick="window.location.href='proyecto.html'">
-🌱 Conocer proyecto
-</button>
-
-
-</div>
-
-
-</div>
-
-
-
-</section>
-
-
-
-
-
-<section class="porque">
-
-
-<h2>
-¿Por qué nace Agrotec?
-</h2>
-
-
-<p>
-
-Ayudamos a los pequeños agricultores a encontrar nuevos mercados,
-mejorar la comercialización y conectar directamente con compradores.
-
-</p>
-
-
-<div class="contenedores">
-
-
-<div>
-
-<h3>
-👨‍🌾 Productores
-</h3>
-
-<p>
-Publican sus productos, cantidades y disponibilidad.
-</p>
-
-</div>
-
-
-<div>
-
-<h3>
-🛒 Compradores
-</h3>
-
-<p>
-Encuentran productos agrícolas disponibles.
-</p>
-
-</div>
-
-
-<div>
-
-<h3>
-🌱 Tecnología
-</h3>
-
-<p>
-Una plataforma que conecta oferta y demanda.
-</p>
-
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-<section class="productos">
-
-
-<h2>
-Productos disponibles
-</h2>
-
-
-<div class="lista">
-
-
-<div class="producto">
-
-🥭
-
-<h3>
-Mango Kent
-</h3>
-
-<p>
-Monsefú - Lambayeque
-</p>
-
-</div>
-
-
-
-<div class="producto">
-
-🌽
-
-<h3>
-Maíz amarillo
-</h3>
-
-<p>
-Ferreñafe
-</p>
-
-</div>
-
-
-
-<div class="producto">
-
-🍚
-
-<h3>
-Arroz
-</h3>
-
-<p>
-Chiclayo
-</p>
-
-</div>
-
-
-</div>
-
-
-</section>
-
-
-
-
-
-
-<section class="impacto">
-
-
-<h2>
-Agricultura que transforma vidas
-</h2>
-
-
-<div>
-
-<h3>
-500+
-</h3>
-
-<p>
-Productores conectados
-</p>
-
-
-</div>
-
-
-<div>
-
-<h3>
-100+
-</h3>
-
-<p>
-Compradores registrados
-</p>
-
-
-</div>
-
-
-<div>
-
-<h3>
-Lambayeque
-</h3>
-
-<p>
-Región inicial
-</p>
-
-
-</div>
-
-
-</section>
-
-
-
-<footer>
-
-🌱 AGROTEC
-
-<br>
-
-Conectando el campo con oportunidades
-
-<section class="estadisticas">
-
-
-<div>
-<h2>500+</h2>
-<p>Productores registrados</p>
-</div>
-
-
-<div>
-<h2>100+</h2>
-<p>Compradores conectados</p>
-</div>
-
-
-<div>
-<h2>7</h2>
-<p>Distritos de Lambayeque</p>
-</div>
-
-
-</section>
-</footer>
-
-
-
-</body>
-
-</html>
+<!doctype html>
+<html lang="es"><head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Agrotec: conecta productores de Lambayeque con compradores, productos y negocios agrícolas en un mapa interactivo.">
+  <title>Inicio | Agrotec</title><link rel="stylesheet" href="estilo.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzXcBMlM6E+3oXmfVJwW5MQn0=" crossorigin="">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="app.js"></script>
+</head><body data-page="index">
+<header class="site-header"><div class="container header-inner">
+  <a class="logo" href="index.html" aria-label="Agrotec, ir al inicio"><span class="logo-mark">🌱</span> AGROTEC</a>
+  <nav id="topNav" class="top-nav" aria-label="Navegación principal"><a href="index.html" aria-current="page">Inicio</a><a href="productor.html">Soy productor</a><a href="comprador.html">Soy comprador</a><a href="directorio.html">Directorio y mapa</a><a href="proyecto.html">Proyecto</a></nav>
+  <div class="header-actions"><a class="btn-small btn-primary" id="authLink" href="ingresar.html">Ingresar</a><button id="menuToggle" class="menu-toggle" type="button" aria-controls="topNav" aria-expanded="false" aria-label="Abrir menú">☰</button></div>
+</div></header>
+<div id="demoBanner" class="container hidden" role="note"></div>
+<main>
+<section class="hero"><div class="container"><div>
+ <span class="eyebrow">🌾 Del campo a nuevas oportunidades</span>
+ <h1>El campo nos une. <em>Las oportunidades crecen.</em></h1>
+ <p>Conectamos agricultores, emprendimientos agrícolas y compradores de Lambayeque en un solo lugar, sin complicaciones.</p>
+ <div class="hero-buttons"><a class="btn btn-accent" href="comprador.html">🛒 Explorar productos</a><a class="btn btn-light" href="productor.html">👨‍🌾 Soy productor</a><a class="btn btn-outline" style="color:white;border-color:#ffffff77" href="directorio.html">📍 Ver mapa</a></div>
+</div><aside class="hero-side"><span class="chip">¿Cómo funciona?</span><h2>Más cerca del origen</h2><p>Encuentra productos y conoce de dónde vienen.</p><div class="mini-steps"><div class="mini-step"><span>🔎</span><b>Busca productos agrícolas disponibles</b></div><div class="mini-step"><span>📍</span><b>Ubica a los productores en el mapa</b></div><div class="mini-step"><span>🤝</span><b>Contacta directamente con el negocio</b></div></div></aside></div></section>
+<section class="section"><div class="container"><div class="section-head"><div><span class="eyebrow">Una solución para nuestra región</span><h2>¿Qué puedes hacer en Agrotec?</h2><p>Menos barreras para vender y comprar productos del campo.</p></div></div><div class="feature-grid">
+ <article class="feature-card"><div class="feature-icon">🌱</div><h3>Publica tu cosecha</h3><p>Registra lo que vendes, tu precio y disponibilidad. Gestiona tus anuncios desde un solo lugar.</p><p><a href="productor.html" class="btn-small btn-ghost">Comenzar →</a></p></article>
+ <article class="feature-card"><div class="feature-icon">🥭</div><h3>Encuentra productos</h3><p>Explora por tipo, ubicación y precio, y revisa información útil del agricultor.</p><p><a href="comprador.html" class="btn-small btn-ghost">Ir al catálogo →</a></p></article>
+ <article class="feature-card"><div class="feature-icon">📍</div><h3>Descubre negocios cercanos</h3><p>Un mapa de productores con fichas rápidas, dirección y enlace de contacto cuando esté disponible.</p><p><a href="directorio.html" class="btn-small btn-ghost">Abrir directorio →</a></p></article>
+</div></div></section>
+<section class="section section-soft"><div class="container"><div class="section-head"><div><span class="eyebrow">Catálogo agrícola</span><h2>Productos publicados</h2><p>Explora los anuncios de productores en la plataforma.</p></div><a class="btn-small btn-primary" href="comprador.html">Ver todos los productos</a></div><div class="catalog-grid" id="homeProducts"><div class="empty">Cargando productos…</div></div></div></section>
+<section class="section"><div class="container"><div class="section-head"><div><span class="eyebrow">Ubicación y confianza</span><h2>Conoce quién produce y dónde</h2><p>Busca emprendimientos agrícolas por nombre y encuéntralos en el mapa interactivo.</p></div></div><div class="two-col"><div class="panel"><h3>Directorio geográfico</h3><p class="muted">Cada negocio registrado aparece en el mapa con su nombre y ubicación. Los compradores pueden abrir una tarjeta sobre el marcador y ver cómo llegar.</p><a class="btn btn-primary" href="directorio.html">📍 Explorar el mapa</a></div><div class="panel"><h3>¿Eres agricultor o emprendedor?</h3><p class="muted">Puedes inscribirte en el directorio indicando solo el nombre de tu negocio y un punto en el mapa. El teléfono es opcional.</p><a class="btn btn-outline" href="directorio.html#registrar">Registrar mi negocio</a></div></div></div></section>
+<section class="section-tight"><div class="container"><div class="split-cta"><div><h2>Haz que tu cosecha llegue más lejos</h2><p>Publica productos y conecta con nuevos compradores de forma directa.</p></div><a href="productor.html" class="btn btn-accent">Publicar productos →</a></div></div></section>
+</main>
+<footer class="site-footer"><div class="container"><div class="footer-grid"><div><a class="logo" href="index.html"><span class="logo-mark">🌱</span> AGROTEC</a><p>Conectando el campo con nuevas oportunidades para productores y compradores de Lambayeque.</p></div><div><h3>Explora</h3><a href="comprador.html">Catálogo agrícola</a><a href="directorio.html">Directorio y mapa</a><a href="productor.html">Publicar mi cosecha</a></div><div><h3>Agrotec</h3><a href="proyecto.html">Conocer el proyecto</a><a href="ingresar.html">Crear una cuenta</a><p class="tiny">Mapa: © OpenStreetMap y colaboradores.</p></div></div><div class="footer-bottom">© 2026 Agrotec · Plataforma agrícola · Información publicada por los usuarios.</div></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body></html>

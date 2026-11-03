@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="es"><head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="Agrotec: conecta productores de Lambayeque con compradores, productos y negocios agrícolas en un mapa interactivo.">
+  <title>Directorio agrícola y mapa | Agrotec</title><link rel="stylesheet" href="estilo.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzXcBMlM6E+3oXmfVJwW5MQn0=" crossorigin="">
+  <script defer src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script type="module" src="app.js"></script>
+</head><body data-page="directorio">
+<header class="site-header"><div class="container header-inner">
+  <a class="logo" href="index.html" aria-label="Agrotec, ir al inicio"><span class="logo-mark">🌱</span> AGROTEC</a>
+  <nav id="topNav" class="top-nav" aria-label="Navegación principal"><a href="index.html">Inicio</a><a href="productor.html">Soy productor</a><a href="comprador.html">Soy comprador</a><a href="directorio.html" aria-current="page">Directorio y mapa</a><a href="proyecto.html">Proyecto</a></nav>
+  <div class="header-actions"><a class="btn-small btn-primary" id="authLink" href="ingresar.html">Ingresar</a><button id="menuToggle" class="menu-toggle" type="button" aria-controls="topNav" aria-expanded="false" aria-label="Abrir menú">☰</button></div>
+</div></header>
+<div id="demoBanner" class="container hidden" role="note"></div>
+<main>
+<section class="page-hero"><div class="container"><span class="eyebrow">📍 Geolocalización agrícola</span><h1>Directorio de productores</h1><p>Descubre agricultores y negocios en el mapa. Selecciona un pin para ver el nombre, la ubicación y opciones de contacto.</p><div class="hero-links"><a class="btn-small btn-primary" href="#registrar">+ Registrar mi negocio</a></div></div></section>
+<section class="section"><div class="container">
+ <div class="section-head"><div><h2>Explora el mapa</h2><p>Ubicaciones publicadas por los propios emprendedores. La posición exacta se comparte públicamente.</p></div></div>
+ <div class="search-toolbar directory-toolbar"><div class="field"><label for="directorySearch">Buscar emprendimiento</label><input type="search" id="directorySearch" placeholder="Nombre, dirección o distrito"></div><div class="field"><label for="directorySort">Orden</label><select id="directorySort"><option value="recent">Más recientes</option><option value="name">Nombre A–Z</option></select></div></div>
+ <div class="map-legend"><span id="directoryCount" class="muted tiny">Cargando negocios…</span><span class="chip">📍 Pulsa un marcador</span></div>
+ <div class="map-directory-layout"><div class="directory-list" id="directoryList" aria-live="polite"></div><div><div id="directoryMap" class="map-shell" role="region" aria-label="Mapa interactivo de productores de Lambayeque"></div><p class="map-note">Mapa © OpenStreetMap. Las ubicaciones son aportadas por los usuarios; verifica la información antes de desplazarte.</p></div></div>
+ </div></section>
+<section class="section section-soft" id="registrar"><div class="container"><div class="section-head"><div><span class="eyebrow">Formulario sencillo</span><h2>Agrega tu negocio al mapa</h2><p>Solo necesitas el nombre y una ubicación seleccionada en el mapa. Los demás datos son opcionales.</p></div></div>
+ <div class="two-col-asym"><form id="directoryBusinessForm" class="panel" novalidate><h2>Registrar agricultor o emprendimiento</h2>
+  <div class="field"><label for="directoryBusinessName">Nombre del agricultor, emprendimiento o empresa *</label><input id="directoryBusinessName" name="name" maxlength="100" required placeholder="Ej. Asociación Agrícola Santa Rosa"></div>
+  <div class="field"><label for="directoryAddress">Dirección (opcional si seleccionas un punto)</label><div class="input-with-button"><input id="directoryAddress" name="address" maxlength="180" placeholder="Ej. Monsefú, Lambayeque"><button class="btn-small btn-ghost" id="directoryGeocode" type="button">Buscar dirección</button></div></div>
+  <div class="field"><label for="directoryPhone">WhatsApp (opcional)</label><input id="directoryPhone" name="whatsapp" type="tel" placeholder="Ej. 987654321" maxlength="18"><small>Se mostrará públicamente si decides escribirlo. Solo números de Perú u otro país, con código internacional.</small></div>
+  <input type="hidden" name="lat" id="directoryLat"><input type="hidden" name="lng" id="directoryLng">
+  <div class="notice info">La ubicación exacta que elijas se hará pública en el directorio. Usa la dirección comercial o un punto de encuentro si prefieres no publicar tu domicilio.</div>
+  <div class="form-actions"><button class="btn btn-primary" type="submit">📍 Publicar negocio</button><span class="tiny muted">* Campos obligatorios: nombre y ubicación.</span></div><p id="directoryFormMessage" class="form-message" role="status"></p>
+ </form><div class="panel"><h3>Selecciona la ubicación exacta *</h3><p class="panel-intro">Haz clic sobre el mapa para colocar el marcador o busca una dirección.</p><div class="picker-wrap"><div id="directoryPickerMap" class="map-shell small" role="region" aria-label="Mapa para seleccionar la ubicación del negocio"></div></div><p class="coordinate" id="directoryCoords">Todavía no has elegido un punto.</p><button type="button" class="btn-small btn-outline" id="directoryUseLocation">⌖ Usar mi ubicación actual</button><p class="map-note">Necesita permiso del navegador y una conexión segura (HTTPS o localhost).</p></div></div>
+</div></section>
+</main>
+<footer class="site-footer"><div class="container"><div class="footer-grid"><div><a class="logo" href="index.html"><span class="logo-mark">🌱</span> AGROTEC</a><p>Conectando el campo con nuevas oportunidades para productores y compradores de Lambayeque.</p></div><div><h3>Explora</h3><a href="comprador.html">Catálogo agrícola</a><a href="directorio.html">Directorio y mapa</a><a href="productor.html">Publicar mi cosecha</a></div><div><h3>Agrotec</h3><a href="proyecto.html">Conocer el proyecto</a><a href="ingresar.html">Crear una cuenta</a><p class="tiny">Mapa: © OpenStreetMap y colaboradores.</p></div></div><div class="footer-bottom">© 2026 Agrotec · Plataforma agrícola · Información publicada por los usuarios.</div></div></footer>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body></html>
