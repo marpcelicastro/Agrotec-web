@@ -60,9 +60,17 @@ export async function currentUser(){if(!USING_CLOUD)return null;const {data,erro
 export async function currentProfile(){if(!USING_CLOUD)return null;const user=await currentUser();if(!user)return null;const {data,error}=await supabase.from('profiles').select('role,full_name').eq('id',user.id).maybeSingle();check(error);return data;}
 async function requireUser(){const user=await currentUser();if(!user)throw new Error('Debes iniciar sesión para guardar información pública.');return user;}
 export async function logIn(email,password){if(!USING_CLOUD)throw new Error('Activa Supabase para iniciar sesión con seguridad.');const {data,error}=await supabase.auth.signInWithPassword({email,password});check(error);return data;}
-export async function register(email,password,role,name){if(!USING_CLOUD)throw new Error('Activa Supabase para crear cuentas.');const {data,error}=await supabase.auth.signUp({email,password,options:{data:{role,name}}});check(error);return data;}
+export async function register(email,password,role,name){if(!USING_CLOUD)throw new Error('Activa Supabase para crear cuentas.');const {data,error}=await supabase.auth.signUp({email,password,options:{data:{role,name},emailRedirectTo:new URL('ingresar.html',location.href).href}});check(error);return data;}
+export async function requestPasswordReset(email){
+ if(!USING_CLOUD)throw new Error('Necesitas configurar Supabase para recuperar tu contraseña.');
+ const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:new URL('ingresar.html',location.href).href});check(error);
+}
+export async function changePassword(password){
+ if(!USING_CLOUD)throw new Error('Supabase no está configurado.');
+ const {error}=await supabase.auth.updateUser({password});check(error);
+}
 export async function logOut(){if(!USING_CLOUD)return;const {error}=await supabase.auth.signOut();check(error);}
-export function authChanges(callback){if(!supabase)return()=>{};const {data}=supabase.auth.onAuthStateChange(()=>callback());return()=>data.subscription.unsubscribe();}
+export function authChanges(callback){if(!supabase)return()=>{};const {data}=supabase.auth.onAuthStateChange((event,session)=>callback(event,session));return()=>data.subscription.unsubscribe();}
 export async function listBusinesses(){
  if(!USING_CLOUD)return [...demoBusinessList()].sort((a,b)=>b.created_at.localeCompare(a.created_at));
  const {data,error}=await supabase.from('businesses').select('id,owner_id,name,address,lat,lng,whatsapp,created_at').order('created_at',{ascending:false});check(error);return data||[];

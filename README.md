@@ -1,3 +1,32 @@
+# Agrotec Web — versión con observatorio de precios y autenticación
+
+> **Entrega del 3 de noviembre de 2026.** Es una versión de despliegue estático para GitHub Pages; para autenticación real requiere un proyecto propio Supabase y configuración de `config.js`.
+
+## Novedades
+
+- `precios.html`: gráficas seleccionables Chiclayo / Perú / mundo, selector de serie, tabla y exportación CSV.
+- `precios.js`: gráficas SVG sin depender de bibliotecas externas, exportación CSV y ofertas locales cuando haya publicaciones reales.
+- `precios-data.js`: referencias con valores, fecha, unidad y fuente; **son instantáneas históricas, no datos en tiempo real**.
+- `ingresar.html`: inicio de sesión, registro productor/comprador, cierre de sesión, verificación de correo según ajustes de Supabase y recuperación de contraseña.
+- `CONFIGURAR_SUPABASE.md`: instrucciones exactas para activar la autenticación y compartir publicaciones.
+
+### Referencias de precios
+
+- Chiclayo (Moshoqueque): maíz amarillo duro, mínimo S/ 1,40 y máximo S/ 1,60 por kg, fechas 1, 4, 6, 8, 11 y 13 de mayo de 2026. Fuente MIDAGRI. Es un **rango histórico**, no una media diaria ni un valor actualizado al 3/11/2026.
+- Perú: palta Hass S/ 5,23; mango Kent S/ 3,98; maracuyá S/ 5,27; piña Golden S/ 1,72 por kg, fecha 02/11/2026. Fuente Observatorio Agromercado (MIDAGRI).
+- Mundo: serie mensual enero–septiembre 2026 de maíz, trigo HRW estadounidense y arroz tailandés 5%, en US$/tonelada. Fuente: Banco Mundial Pink Sheet (compilado por Macro Lab).
+
+**No comparar directamente** precios de mercados distintos, unidades o calidades; no convertir cotizaciones internacionales a soles sin tipo de cambio, volumen y gastos de importación. Las ofertas locales publicadas por usuarios se etiquetan aparte y solo se muestran cuando Supabase está configurado (excluimos negocios ficticios de la demostración).
+
+### Instalación en GitHub Pages
+
+1. Descarga y descomprime el ZIP.
+2. Sube los archivos de la actualización a la raíz de `https://github.com/marpcelicastro/Agrotec-web`, **no el ZIP**. Se reemplazarán archivos de nombres existentes. Conserva copia previa. **Este ZIP de actualización no incluye `config.js` para que no sobrescribas tus credenciales públicas si ya las configuraste.** Tampoco elimina tus imágenes originales.
+3. Confirma el commit. Abre `https://marpcelicastro.github.io/Agrotec-web/precios.html`.
+4. Para activar la sesión real sigue **`CONFIGURAR_SUPABASE.md`**. Es necesaria una cuenta Supabase y que tú pegues la clave **pública** en `config.js` en tu GitHub.
+
+---
+
 # 🌱 Agrotec — sitio web mejorado
 
 Versión ampliada de la estructura original de **Agrotec-web**, para acercar a agricultores de Lambayeque con compradores.

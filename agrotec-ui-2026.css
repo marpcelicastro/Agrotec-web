@@ -31,3 +31,5 @@ body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; 
   .feature-card:hover, .product-card:hover { transform: translateY(-4px); box-shadow: 0 18px 46px rgba(24,68,48,.13); }
 }
 @media (prefers-reduced-motion:reduce){ html{scroll-behavior:auto} .btn,.btn-small,.feature-card,.product-card,.panel{transition:none} }
+
+.auth-support{margin-top:14px;text-align:center}.auth-forgot{border:0;background:transparent;color:#197047;font-size:13px;font-weight:800;text-decoration:underline;cursor:pointer;padding:8px}.auth-card a{color:#1f8354;font-weight:800;text-decoration:underline}.auth-card #recoverForm{padding:14px 0}.market-teaser{min-width:0}

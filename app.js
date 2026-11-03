@@ -1,7 +1,8 @@
-import {cloudEnabled,initStore,currentUser,currentProfile,logIn,register,logOut,listBusinesses,myBusinesses,createBusiness,deleteBusiness,listProducts,myProducts,saveProduct,deleteProduct,saveImage,subscribeLive} from './data.js';
+import {cloudEnabled,initStore,currentUser,currentProfile,logIn,register,logOut,listBusinesses,myBusinesses,createBusiness,deleteBusiness,listProducts,myProducts,saveProduct,deleteProduct,saveImage,subscribeLive,requestPasswordReset,changePassword,authChanges} from './data.js';
 
 const $=(id)=>document.getElementById(id);
 const page=document.body.dataset.page;
+const isRecoveryLink=new URLSearchParams(location.hash.slice(1)).get('type')==='recovery';
 const pointCenter=[-6.7707,-79.8461]; // Vista regional de Lambayeque; no es una ubicación de usuario.
 let businessCache=[], productCache=[];
 const escapeHTML=(value)=>String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -30,7 +31,7 @@ function productMarkup(p){const b=p.businesses||{};const im=imgURL(p.image_url);
   <div class="product-actions"><button type="button" class="btn-small btn-primary" data-detail="${escapeHTML(p.id)}">Ver detalles</button><a class="btn-small btn-outline" href="directorio.html?negocio=${encodeURIComponent(b.id||'')}">Ver mapa</a></div>
   </div></article>`;}
 function setupNav(){const menu=$('menuToggle'),nav=$('topNav');menu?.addEventListener('click',()=>{const open=nav.classList.toggle('open');menu.setAttribute('aria-expanded',String(open));menu.setAttribute('aria-label',open?'Cerrar menú':'Abrir menú');});
- if(!cloudEnabled()){const banner=$('demoBanner');banner?.classList.remove('hidden');if(banner){banner.className='container notice';banner.innerHTML='<b>Modo demostración:</b> los negocios de ejemplo son ficticios y los cambios solo se guardan en tu navegador. <a style="text-decoration:underline" href="README.md">Configura Supabase</a> para compartir datos reales.';}}
+ if(!cloudEnabled()){const banner=$('demoBanner');banner?.classList.remove('hidden');if(banner){banner.className='container notice';banner.innerHTML='<b>Modo demostración:</b> los negocios de ejemplo son ficticios y los cambios solo se guardan en tu navegador. <a style="text-decoration:underline" href="CONFIGURAR_SUPABASE.md">Cómo activar Supabase</a> para compartir datos reales.';}}
 }
 async function setupAuthLink(){const a=$('authLink');if(!a)return;try{const user=await currentUser();if(user){a.textContent='Mi cuenta';a.href='ingresar.html';}}catch{}}
 // Los formularios reutilizan este selector de punto en el mapa.
@@ -124,7 +125,14 @@ async function refreshProducer(){businessCache=await myBusinesses();productCache
 function resetProductForm(){const form=$('productForm');form.reset();$('productId').value='';$('productFormTitle').textContent='Nueva publicación';$('saveProductBtn').textContent='Publicar producto';$('cancelProductEdit').classList.add('hidden');setMessage($('productFormMessage'),'');}
 function editProduct(id){const p=productCache.find(item=>item.id===id);if(!p)return;$('productId').value=p.id;$('productBusiness').value=p.business_id;$('productName').value=p.name;$('productCategory').value=p.category;$('productQuantity').value=p.quantity;$('productUnit').value=p.unit;$('productPrice').value=p.price;$('productHarvest').value=p.harvest_date||'';$('productDescription').value=p.description||'';$('productFormTitle').textContent='Editar publicación';$('saveProductBtn').textContent='Guardar cambios';$('cancelProductEdit').classList.remove('hidden');$('productForm').scrollIntoView({behavior:'smooth',block:'start'});}
 async function initProducer(){
- wireBusinessForm('producer',refreshProducer);const access=$('producerAccess');if(cloudEnabled()&&!(await currentUser())){access.classList.remove('hidden');access.innerHTML='Para registrar negocios y productos públicos, primero debes <a href="ingresar.html" style="text-decoration:underline">iniciar sesión o crear una cuenta de productor</a>.';}
+ wireBusinessForm('producer',refreshProducer);const access=$('producerAccess');
+ if(cloudEnabled()){
+  const user=await currentUser();const role=user?(await currentProfile())?.role:null;
+  if(!user||role!=='productor'){
+   access.classList.remove('hidden');access.innerHTML=!user?'Para registrar negocios y productos públicos debes <a href="ingresar.html">iniciar sesión o crear una cuenta de productor</a>.':'Tu cuenta es de comprador. Para publicar necesitas una cuenta de productor.';
+   for(const id of ['producerBusinessForm','productForm'])$(id)?.querySelectorAll('input,select,textarea,button').forEach(el=>el.disabled=true);
+  }
+ }
  await refreshProducer();$('cancelProductEdit')?.addEventListener('click',resetProductForm);
  $('myBusinesses')?.addEventListener('click',async(e)=>{const btn=e.target.closest('[data-delete-business]');if(!btn)return;const b=businessCache.find(x=>x.id===btn.dataset.deleteBusiness);if(!b||!confirm(`¿Eliminar «${b.name}»? También se eliminarán sus productos.`))return;
  try{toggleBusy(btn,true);await deleteBusiness(b.id);await refreshProducer();flash('Negocio eliminado.');}catch(err){flash(err.message);}finally{toggleBusy(btn,false);}});
@@ -136,16 +144,25 @@ async function initProducer(){
  await saveProduct(product,id||null);resetProductForm();await refreshProducer();flash(id?'Producto actualizado.':'Producto publicado en el catálogo.');setMessage(msg,id?'✓ Cambios guardados.':'✓ Producto publicado correctamente.');
  }catch(err){displayError(msg,err);}finally{toggleBusy(btn,false);}});
 }
-async function initAuth(){const form=$('authForm'),tabs={login:$('tabLogin'),register:$('tabRegister')};let mode='login';function setMode(next){mode=next;tabs.login.classList.toggle('active',next==='login');tabs.register.classList.toggle('active',next==='register');tabs.login.setAttribute('aria-selected',String(next==='login'));tabs.register.setAttribute('aria-selected',String(next==='register'));$('authNameField').classList.toggle('hidden',next!=='register');$('authRoleField').classList.toggle('hidden',next!=='register');$('authSubmit').textContent=next==='login'?'Ingresar':'Crear cuenta';$('authPassword').autocomplete=next==='login'?'current-password':'new-password';setMessage($('authMessage'),'');}
+async function initAuth(){
+ const form=$('authForm'),tabs={login:$('tabLogin'),register:$('tabRegister')};let mode='login';
+ function setMode(next){mode=next;tabs.login.classList.toggle('active',next==='login');tabs.register.classList.toggle('active',next==='register');tabs.login.setAttribute('aria-selected',String(next==='login'));tabs.register.setAttribute('aria-selected',String(next==='register'));$('authNameField').classList.toggle('hidden',next!=='register');$('authRoleField').classList.toggle('hidden',next!=='register');$('authSubmit').textContent=next==='login'?'Ingresar':'Crear cuenta';$('authPassword').autocomplete=next==='login'?'current-password':'new-password';$('authPassword').setAttribute('minlength',next==='register'?'8':'6');setMessage($('authMessage'),'');}
  tabs.login.addEventListener('click',()=>setMode('login'));tabs.register.addEventListener('click',()=>setMode('register'));
- if(!cloudEnabled()){$('authDemoMessage').classList.remove('hidden');$('authDemoMessage').innerHTML='El inicio de sesión seguro requiere activar <b>Supabase</b>. Mientras tanto, puedes <a href="productor.html" style="text-decoration:underline">probar el panel del productor sin cuenta</a>, con datos guardados solo en este navegador.';form.querySelectorAll('input,select,button[type=submit]').forEach(el=>el.disabled=true);return;}
- const existing=await currentUser();if(existing){form.classList.add('hidden');$('sessionPanel').classList.remove('hidden');const profile=await currentProfile();$('sessionInfo').textContent=`Has iniciado sesión como ${existing.email}${profile?.role?' ('+profile.role+')':''}.`;}else{$('sessionPanel').classList.add('hidden');}
- $('logoutBtn').addEventListener('click',async()=>{try{await logOut();location.reload();}catch(e){flash(e.message);}});
- form.addEventListener('submit',async(e)=>{e.preventDefault();const btn=$('authSubmit');toggleBusy(btn,true,'Procesando…');setMessage($('authMessage'),'');try{const email=$('authEmail').value.trim(),password=$('authPassword').value;if(!email||!password)throw new Error('Completa el correo y la contraseña.');if(password.length<6)throw new Error('La contraseña debe tener al menos 6 caracteres.');
- if(mode==='register'){const result=await register(email,password,$('authRole').value,$('authName').value.trim());if(result.session){location.href=$('authRole').value==='productor'?'productor.html':'comprador.html';return;}setMessage($('authMessage'),'✓ Revisa tu correo electrónico para confirmar el registro y luego inicia sesión.');}
+ if(!cloudEnabled()){$('authDemoMessage').classList.remove('hidden');$('authDemoMessage').innerHTML='Las cuentas reales requieren conectar tu proyecto de <b>Supabase</b>. Consulta <a href="CONFIGURAR_SUPABASE.md">la guía de activación</a>. Mientras tanto puedes <a href="productor.html">probar el panel sin cuenta</a>, pero solo en este navegador.';form.querySelectorAll('input,select,button[type=submit]').forEach(el=>el.disabled=true);$('forgotPassword').disabled=true;return;}
+ const sessionPanel=$('sessionPanel'),recoverForm=$('recoverForm');
+ function showPasswordRecovery(){form.classList.add('hidden');sessionPanel.classList.add('hidden');recoverForm.classList.remove('hidden');$('resetPassword').focus();}
+ if(isRecoveryLink)showPasswordRecovery();
+ authChanges((event)=>{if(event==='PASSWORD_RECOVERY')showPasswordRecovery();});
+ const existing=await currentUser();if(existing&&!isRecoveryLink&&!location.hash.includes('type=recovery')){form.classList.add('hidden');sessionPanel.classList.remove('hidden');const profile=await currentProfile();$('sessionInfo').textContent=`Has iniciado sesión como ${existing.email}${profile?.role?' ('+profile.role+')':''}.`;const link=$('sessionGo');link.textContent=profile?.role==='productor'?'Ir a mi panel':'Explorar catálogo';link.href=profile?.role==='productor'?'productor.html':'comprador.html';}else if(!isRecoveryLink){sessionPanel.classList.add('hidden');}
+ $('logoutBtn').addEventListener('click',async()=>{try{await logOut();location.replace('ingresar.html');}catch(e){flash(e.message);}});
+ $('forgotPassword').addEventListener('click',async()=>{const email=$('authEmail').value.trim();if(!email||!$('authEmail').checkValidity()){setMessage($('authMessage'),'Primero escribe tu correo electrónico válido.',true);$('authEmail').focus();return;}const btn=$('forgotPassword');toggleBusy(btn,true,'Enviando…');try{await requestPasswordReset(email);setMessage($('authMessage'),'Si existe una cuenta con ese correo, recibirás un enlace de recuperación. Revisa también spam.');}catch(e){displayError($('authMessage'),e);}finally{toggleBusy(btn,false);}});
+ recoverForm.addEventListener('submit',async(e)=>{e.preventDefault();const pass=$('resetPassword').value;if(pass.length<8){setMessage($('recoverMessage'),'La nueva contraseña debe tener 8 caracteres o más.',true);return;}const btn=$('changePasswordBtn');toggleBusy(btn,true,'Guardando…');try{await changePassword(pass);setMessage($('recoverMessage'),'Contraseña cambiada correctamente. Por seguridad, vuelve a iniciar sesión.');await logOut();setTimeout(()=>location.replace('ingresar.html'),1600);}catch(err){displayError($('recoverMessage'),err);}finally{toggleBusy(btn,false);}});
+ form.addEventListener('submit',async(e)=>{e.preventDefault();const btn=$('authSubmit');toggleBusy(btn,true,'Procesando…');setMessage($('authMessage'),'');try{const email=$('authEmail').value.trim(),password=$('authPassword').value;if(!email||!$('authEmail').checkValidity()||!password)throw new Error('Completa un correo válido y tu contraseña.');if(mode==='register'&&password.length<8)throw new Error('Al registrarte, utiliza una contraseña de al menos 8 caracteres.');
+ if(mode==='register'){const result=await register(email,password,$('authRole').value,$('authName').value.trim());if(result.session){location.href=$('authRole').value==='productor'?'productor.html':'comprador.html';return;}setMessage($('authMessage'),'✓ Revisa el correo de confirmación (y spam). Haz clic en el enlace para activar tu cuenta y luego inicia sesión.');}
  else{await logIn(email,password);const profile=await currentProfile();location.href=profile?.role==='productor'?'productor.html':'comprador.html';}
  }catch(err){displayError($('authMessage'),err);}finally{toggleBusy(btn,false);}});
 }
+
 async function main(){setupNav();try{await initStore();await setupAuthLink();if(page==='index')await initHome();if(page==='comprador')await initBuyer();if(page==='directorio')await initDirectory();if(page==='productor')await initProducer();if(page==='ingresar')await initAuth();
  if(cloudEnabled()&&['comprador','directorio','index','productor'].includes(page)){
   subscribeLive(async()=>{try{if(page==='comprador')await refreshCatalog();if(page==='directorio')await refreshDirectory();if(page==='index')await initHome();if(page==='productor')await refreshProducer();}catch(e){console.warn('No se pudo actualizar automáticamente:',e);}});
